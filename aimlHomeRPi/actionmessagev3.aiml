@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml version="1.0">
+
+<srai>QUEL EST TON NOM</srai>
+
+<category><pattern>FERMETURE DES VOLETS</pattern><template>ACTIONMESSAGE FERMETURE DES VOLETS</template></category>
+<category><pattern>OUVERTURE DES VOLETS</pattern><template>ACTIONMESSAGE OUVERTURE DES VOLETS</template></category>
+<category><pattern>ALLUMER LAMPE 2</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 2</template></category>
+<category><pattern>ALLUMER LAMPE 1</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 1</template></category>
+<category><pattern>ETEINDRE LAMPE 2</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 2</template></category>
+<category><pattern>ETEINDRE LAMPE 1</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 1</template></category>
+<category><pattern>STOP STORE</pattern><template>ACTIONMESSAGE STOP STORE</template></category>
+<category><pattern>MAJ XBMC</pattern><template>ACTIONMESSAGE MAJ XBMC</template></category>
+
+<category><pattern>* FERMETURE * VOLET* *</pattern><template><srai>FERMETURE DES VOLETS</srai></template></category>
+<category><pattern>* OUVERTURE * VOLET* *</pattern><template><srai>OUVERTURE DES VOLETS</srai></template></category>
+<category><pattern>* *FERME* * VOLET* *</pattern><template><srai>FERMETURE DES VOLETS</srai></template></category>
+<category><pattern>* *OUVR* * VOLET* *</pattern><template><srai>OUVERTURE DES VOLETS</srai></template></category>
+
+<category><pattern>* FERMETURE * STORE* *</pattern><template><srai>FERMETURE DES VOLETS</srai></template></category>
+<category><pattern>* OUVERTURE * STORE* *</pattern><template><srai>OUVERTURE DES VOLETS</srai></template></category>
+<category><pattern>* *FERME* * STORE* *</pattern><template><srai>FERMETURE DES VOLETS</srai></template></category>
+<category><pattern>* *OUVR* * STORE* *</pattern><template><srai>OUVERTURE DES VOLETS</srai></template></category>
+
+<category><pattern>* ALLUM* UNE LAMPE* *</pattern><template><random><li>ACTIONMESSAGE ALLUMER LAMPE 1</li><li>ACTIONMESSAGE ALLUMER LAMPE 2</li></random></template></category>
+
+<category><pattern>* ALLUM* * LAMPE* * DROITE</pattern><template><srai>ALLUMER LAMPE 2</srai></template></category>
+<category><pattern>* ALLUM* * LAMPE* * BAR</pattern><template><srai>ALLUMER LAMPE 2</srai></template></category>
+<category><pattern>* ALLUM* * LAMPE* * 2</pattern><template><srai>ALLUMER LAMPE 2</srai></template></category>
+<category><pattern>* ALLUM* * LAMPE* * DEUX</pattern><template><srai>ALLUMER LAMPE 2</srai></template></category>
+
+<category><pattern>* ALLUM* * LAMPE* * GAUCHE</pattern><template><srai>ALLUMER LAMPE 1</srai></template></category>
+<category><pattern>* ALLUM* * LAMPE* * FENETRE</pattern><template><srai>ALLUMER LAMPE 1</srai></template></category>
+<category><pattern>* ALLUM* * LAMPE* * VITREE</pattern><template><srai>ALLUMER LAMPE 1</srai></template></category>
+<category><pattern>* ALLUM* * LAMPE* * VITRE</pattern><template><srai>ALLUMER LAMPE 1</srai></template></category>
+<category><pattern>* ALLUM* * LAMPE* * 1</pattern><template><srai>ALLUMER LAMPE 1</srai></template></category>
+<category><pattern>* ALLUM* * LAMPE* * UN</pattern><template><srai>ALLUMER LAMPE 1</srai></template></category>
+<category><pattern>* ALLUM* * LAMPE* * UNE</pattern><template><srai>ALLUMER LAMPE 1</srai></template></category>
+
+<category><pattern>* ALLUM* * LAMPE* *</pattern><template>ACTIONMESSAGE ALLUMER TOUTES LES LAMPES</template></category>
+
+<category><pattern>* ETEIN* UNE LAMPE* *</pattern><template><random><li>ACTIONMESSAGE ETEINDRE LAMPE 1</li><li>ACTIONMESSAGE ETEINDRE LAMPE 2</li></random></template></category>
+
+<category><pattern>* ETEIN* * LAMPE* * DROITE</pattern><template><srai>ETEINDRE LAMPE 2</srai></template></category>
+<category><pattern>* ETEIN* * LAMPE* * BAR</pattern><template><srai>ETEINDRE LAMPE 2</srai></template></category>
+<category><pattern>* ETEIN* * LAMPE* * 2</pattern><template><srai>ETEINDRE LAMPE 2</srai></template></category>
+<category><pattern>* ETEIN* * LAMPE* * DEUX</pattern><template><srai>ETEINDRE LAMPE 2</srai></template></category>
+
+<category><pattern>* ETEIN* * LAMPE* * GAUCHE</pattern><template><srai>ETEINDRE LAMPE 1</srai></template></category>
+<category><pattern>* ETEIN* * LAMPE* * FENETRE</pattern><template><srai>ETEINDRE LAMPE 1</srai></template></category>
+<category><pattern>* ETEIN* * LAMPE* * VITREE</pattern><template><srai>ETEINDRE LAMPE 1</srai></template></category>
+<category><pattern>* ETEIN* * LAMPE* * VITRE</pattern><template><srai>ETEINDRE LAMPE 1</srai></template></category>
+<category><pattern>* ETEIN* * LAMPE* * 1</pattern><template><srai>ETEINDRE LAMPE 1</srai></template></category>
+<category><pattern>* ETEIN* * LAMPE* * UN</pattern><template><srai>ETEINDRE LAMPE 1</srai></template></category>
+<category><pattern>* ETEIN* * LAMPE* * UNE</pattern><template><srai>ETEINDRE LAMPE 1</srai></template></category>
+
+<category><pattern>* ETEIN* * LAMPE* *</pattern><template>ACTIONMESSAGE ETEINDRE TOUTES LES LAMPES</template></category>
+
+<category><pattern>* MISE A JOUR * XBMC *</pattern><template><srai>MAJ XBMC</srai></template></category>
+<category><pattern>* MAJ * XBMC *</pattern><template><srai>MAJ XBMC</srai></template></category>
+<category><pattern>* MISE * JOUR * XBMC *</pattern><template><srai>MAJ XBMC</srai></template></category>
+<category><pattern>* UPDATE * XBMC *</pattern><template><srai>MAJ XBMC</srai></template></category>
+
+<category><pattern>* STOP *</pattern><template><srai>STOP STORE</srai></template></category>
+<category><pattern>* STAP *</pattern><template><srai>STOP STORE</srai></template></category>
+<category><pattern>* TOP *</pattern><template><srai>STOP STORE</srai></template></category>
+<category><pattern>* TAP *</pattern><template><srai>STOP STORE</srai></template></category>
+<category><pattern>* ARRET *</pattern><template><srai>STOP STORE</srai></template></category>
+	
+</aiml>

@@ -1,0 +1,29 @@
+
+Présentation
+====
+
+Permet la gestion de périphériques radio chacon via un rapsberry PI
+
+Pré-requis
+====
+
+- Serveur Apache conseillé (Non testé sur les autres serveurs types Nginx ...)
+- PHP 5.3 minimum (facultatif, conseillé)
+- Un peu de bon sens :)
+
+
+Installation
+====
+Tout est expliqué sur blog.idleman.fr
+
+
+Questions courantes	(F.A.Q)
+====
+Tout est expliqué sur blog.idleman.fr
+
+Librairies utilisées
+==
+
+- Responsive / Cross browser / CSS : Twitter boostrap
+- Javascript : JQuery (http://www.jquery.com)
+- Moteur template : RainTPL (http://www.raintpl.com)

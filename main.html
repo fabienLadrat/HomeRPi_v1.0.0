@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Speak and command FLAD</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+<script src="speak.js"></script>
+<style>
+	.ui-icon-my-speaker {
+		background-size: 36px 36px;
+	}
+	#info {
+		display : none;
+	}
+	.statelight {
+		float : left;
+	}
+	.centerDiv{
+		text-align:center;
+	}
+	.titreApp{
+		
+	}
+	.copyright{
+		color: #999 !important;
+		font-size: 0.6em !important;
+		margin-top: 10px !important;
+		font-style: normal !important;
+	}
+	
+	#results div{
+		border-color:#4F4F4F !important;
+	}
+	#final_span{
+		background-color:#4F4F4F;
+		border-color:#4F4F4F !important;
+		font-style : italic;
+	}
+	.ui-btn-active {
+		background-color:#CDCDCD !important;
+		border-color:#CDCDCD !important;
+		color:#4F4F4F !important;
+		text-shadow : none !important;
+		-moz-box-shadow: inset 0 0 3px      #CDCDCD  , 0 0 9px         #CDCDCD  !important;
+		-webkit-box-shadow: inset 0 0 3px   #CDCDCD  , 0 0 9px         #CDCDCD  !important;
+		box-shadow: inset 0 0 3px           #CDCDCD  , 0 0 9px         #CDCDCD  !important;
+	}
+	.enableLink{
+		background-color:#4F4F4F !important;
+		border-color:#4F4F4F !important;
+		border-right-color:#999 !important;
+		border-left-color:#999 !important;
+		color:#CDCDCD !important;
+		text-shadow : none !important;
+	}
+	.microbutton{
+		background-color:#4F4F4F !important;
+		border-color:#4F4F4F !important;
+	}
+	.switchbutton{
+		background-color:#CDCDCD !important;
+		border-color:#4F4F4F !important;
+	}
+	.ui-focus,
+	.ui-btn:focus {
+		-moz-box-shadow: inset 0 0 3px      #CDCDCD  , 0 0 9px         #CDCDCD  !important;
+		-webkit-box-shadow: inset 0 0 3px   #CDCDCD  , 0 0 9px         #CDCDCD  !important;
+		box-shadow: inset 0 0 3px           #CDCDCD  , 0 0 9px         #CDCDCD  !important;
+
+	}
+	.ui-input-text.ui-focus,
+	.ui-input-search.ui-focus {
+		-moz-box-shadow: 0 0 12px           #CDCDCD !important;
+		-webkit-box-shadow: 0 0 12px        #CDCDCD !important;
+		box-shadow: 0 0 12px                #CDCDCD !important;    
+
+	}
+	.main{
+		background: #7d7e7d; /* Old browsers */
+		background: -moz-linear-gradient(top,  #7d7e7d 0%, #0e0e0e 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7d7e7d), color-stop(100%,#0e0e0e)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%); /* IE10+ */
+		background: linear-gradient(to bottom,  #7d7e7d 0%,#0e0e0e 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7d7e7d', endColorstr='#0e0e0e',GradientType=0 ); /* IE6-9 */
+	}
+	.devicename{
+		color: #CDCDCD !important;
+		font-style: normal !important;
+		text-shadow: 0 0 0 #CDCDCD; /* horizontal-offset vertical-offset 'blur' colour */
+	  -moz-text-shadow: 0 0 0 #CDCDCD;
+	  -webkit-text-shadow: 0 0 0 #CDCDCD;
+	}
+	.footerClass{
+		background-color:#4F4F4F !important;
+		border-color:#4F4F4F !important;
+		text-shadow : none !important;
+	}
+	.headerClass{
+		background-color:#4F4F4F !important;
+		border-color:#4F4F4F !important;
+		text-shadow : none !important;
+	}
+	.leftbuttonside{
+		border-left-color:#4F4F4F !important;
+	}
+
+</style>
+<script>
+ 
+	function ScaleContentToDevice(){
+		scroll(0, 0);
+		var divSelected = "speaker";
+		if($("#light").css("display")=="block"){
+			divSelected = "light";
+		}else if($("#store").css("display")=="block"){
+			divSelected = "store";
+		}else if($("#clim").css("display")=="block"){
+			divSelected = "clim";
+		}
+		var content = $.mobile.getScreenHeight() - $("#"+divSelected + " .ui-header").outerHeight() - $("#"+divSelected + " .ui-footer").outerHeight() - $("#"+divSelected + " .ui-content").outerHeight() + $("#"+divSelected + " .ui-content").height();
+		$("#"+divSelected + " .ui-content").height(content);
+	}
+	
+	function speaker(msg){
+		//responsiveVoice.speak(msg,"French Female");
+	}
+		
+	var socket = io.connect('https://fabien1664.raspctl.com:9093');
+	socket.on('message', function(message) {
+		alert(message);
+	});
+	
+	socket.on('errordb', function(data) {
+		$("#errordb").text(data.msg);
+	});
+	
+	socket.on('responseclickaction', function(data) {
+		$("#state_light_"+data.id).text(data.msg);
+	});
+
+	$(document).on("pagecontainershow", function(){
+		ScaleContentToDevice(); 
+	});
+
+	$(window).on("resize orientationchange", function(){
+		ScaleContentToDevice();
+	});
+		
+	function refreshStateLight(socket){
+		$('span[id^="state_light_"]').each(function() {
+			var nb = this.id.substring(this.id.lastIndexOf("_") + 1);
+			socket.emit('firstconnection', nb);
+		});
+	}
+	
+	$(document).ready(function() {
+
+		refreshStateLight(socket);
+
+		$("a").click(function(event) {
+			var id = event.target.id;
+			var tabCommand = id.split("_");
+			
+			if(id.indexOf("light")!=-1){
+				var deviceDetail={  
+					id : tabCommand[1],  
+					state : tabCommand[2]  
+				}; 
+				socket.emit('clickaction', deviceDetail);
+			}
+		});
+		
+		$("#final_span").change(function() {
+			socket.emit('speakmessage', $("#final_span").val());
+		});
+		
+		$('#speaker_id').click(function () {
+			startButton();
+		});
+
+	});
+
+</script>
+
+
+<div data-role="page" id="speaker" class="main">
+	<div data-role="header" data-id="hea1" data-position="fixed" class="centerDiv headerClass">HomeRPi FLAD</div>
+	<div data-role="content" class="ui-content right">
+		<div id="results" class="ui-grid-b">
+			<input type="text" name="name_span" readonly id="final_span" data-mini="true"/>
+		</div>	
+		<div class="centerDiv"><a href="#" data-role="button" class="clickbutton microbutton" data-inline="true" data-mini="true" onclick="startButton();"><img id="speaker_id" src="mic.gif"></a></div>
+	</div>
+	<div data-role="footer" data-id="foo1" data-position="fixed" data-tap-toggle="false" class="centerDiv footerClass">
+		<div data-role="navbar" data-id="nav1" data-position="fixed">
+			<ul>
+				<li><a href="#speaker" data-transition="flip" data-back="true" id="speakerbutton" class="ui-btn-active ui-state-persist">Commande vocale</a></li>
+				<li><a href="#light" data-transition="flip" data-back="true" class="enableLink">Lumière</a></li>
+				<li><a href="#store" data-transition="flip" data-back="true" class="enableLink">Volets</a></li>
+				<li><a href="#clim" data-transition="flip" data-back="true" class="enableLink">Ventilation</a></li>
+			</ul>
+		</div>
+		<p class="copyright">&copy; Copyright 2015 Fabien LADRAT</p>
+	</div>
+</div>
+
+
+<div data-role="page" id="light" class="main">
+	<div data-role="header" data-id="hea1" data-position="fixed" class="centerDiv headerClass">HomeRPi FLAD</div>
+	<div data-role="content" class="ui-content right">
+		<div id="errordb"></div>
+	
+		<span id="state_light_1" class="devicename">Lampe 1 : </span>
+		<div data-role="controlgroup" data-type="horizontal">
+			<a href="" id="light_1_on" class="clickbutton switchbutton" data-role="button">On</a>
+			<a href="" id="light_1_off" class="clickbutton switchbutton" data-role="button">Off</a>
+		</div>
+		<span id="state_light_2" class="devicename">Lampe 2 : </span>
+		<div data-role="controlgroup" data-type="horizontal">
+			<a href="" id="light_2_on" class="clickbutton switchbutton" data-role="button">On</a>
+			<a href="" id="light_2_off" class="clickbutton switchbutton" data-role="button">Off</a>
+		</div>
+		<span id="state_light_4" class="devicename">Lampe 4 : </span>
+		<div data-role="controlgroup" data-type="horizontal">
+			<a href="" id="light_4_on" class="clickbutton switchbutton" data-role="button">On</a>
+			<a href="" id="light_4_off" class="clickbutton switchbutton" data-role="button">Off</a>
+		</div>
+	</div>
+	<div data-role="footer" data-id="foo1" data-position="fixed" data-tap-toggle="false" class="centerDiv footerClass">
+		<div data-role="navbar" data-id="nav1" data-position="fixed">
+			<ul>
+				<li><a href="#speaker" data-transition="flip" data-back="true" class="enableLink leftbuttonside">Commande vocale</a></li>
+				<li><a href="#light" data-transition="flip" data-back="true" class="ui-btn-active ui-state-persist">Lumière</a></li>
+				<li><a href="#store" data-transition="flip" data-back="true" class="enableLink">Volets</a></li>
+				<li><a href="#clim" data-transition="flip" data-back="true" class="enableLink">Ventilation</a></li>
+			</ul>
+		</div>
+		<p class="copyright">&copy; Copyright 2015 Fabien LADRAT</p>
+	</div>
+</div>
+
+<div data-role="page" id="store" class="main">
+	<div data-role="header" data-id="hea1" data-position="fixed" class="centerDiv headerClass">HomeRPi FLAD</div>
+	<div data-role="content" class="ui-content right">
+		<span id="state_store_3" class="devicename">Volet roulant : </span>
+	</div>
+	<div data-role="footer" data-id="foo1" data-position="fixed" data-tap-toggle="false" class="centerDiv footerClass">
+		<div data-role="navbar" data-id="nav1" data-position="fixed">
+			<ul>
+				<li><a href="#speaker" data-transition="flip" data-back="true" class="enableLink leftbuttonside">Commande vocale</a></li>
+				<li><a href="#light" data-transition="flip" data-back="true" class="enableLink">Lumière</a></li>
+				<li><a href="#store" data-transition="flip" data-back="true" class="ui-btn-active ui-state-persist">Volets</a></li>
+				<li><a href="#clim" data-transition="flip" data-back="true" class="enableLink">Ventilation</a></li>
+			</ul>
+		</div>
+		<p class="copyright">&copy; Copyright 2015 Fabien LADRAT</p>
+	</div>
+</div>
+
+<div data-role="page" id="clim" class="main">
+	<div data-role="header" data-id="hea1" data-position="fixed" class="centerDiv headerClass">HomeRPi FLAD</div>
+	<div data-role="content" class="ui-content right">
+		<span id="state_clim_1" class="devicename">Climatisation : </span>
+		<span id="state_ventilateur_1" class="devicename">Ventilation : </span>
+	</div>
+	<div data-role="footer" data-id="foo1" data-position="fixed" data-tap-toggle="false" class="centerDiv footerClass">
+		<div data-role="navbar" data-id="nav1" data-position="fixed">
+			<ul>
+				<li><a href="#speaker" data-transition="flip" data-back="true" class="enableLink leftbuttonside">Commande vocale</a></li>
+				<li><a href="#light" data-transition="flip" data-back="true" class="enableLink">Lumière</a></li>
+				<li><a href="#store" data-transition="flip" data-back="true" class="enableLink">Volets</a></li>
+				<li><a href="#clim" data-transition="flip" data-back="true" class="ui-btn-active ui-state-persist">Ventilation</a></li>
+			</ul>
+		</div>
+		<p class="copyright">&copy; Copyright 2015 Fabien LADRAT</p>
+	</div>
+</div>
+
+</div>
+
+
+

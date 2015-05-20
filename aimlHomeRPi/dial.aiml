@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml>
+    <category><pattern>QUEL EST TON NOM</pattern><template>JE M APPELLE <bot name='name'/>.</template></category>
+    <category><pattern>JE M APPELLE <set name='clientName'>*</set></pattern><template>BONJOUR <get name='clientName'/>!</template></category>
+	<category><pattern>JE ME NOMME <set name='clientName'>*</set></pattern><template>SALUT <get name='clientName'/>!</template></category>
+    <category><pattern>QUEL EST MON NOM</pattern><template>TU T APPELLES <get name='clientName'/></template></category>
+    <category><pattern>QUI ES TU</pattern><template><srai>QUEL EST TON NOM</srai></template></category>
+	<category><pattern>COMMENT TU T APPELLES</pattern><template><srai>QUEL EST TON NOM</srai></template></category>
+	<category><pattern>C EST QUOI TON NOM</pattern><template><srai>QUEL EST TON NOM</srai></template></category>
+	<category><pattern>A QUOI * SERS *</pattern><template>JE SUIS L ASSISTANT DE <get name='clientName'/></template></category>
+    <category><pattern>DONNE MOI UNE LETTRE</pattern><template><random><li>A</li><li>B</li><li>C</li></random></template></category>
+	<category><pattern>CATEGORY NOT FOUND</pattern><template><random><li>DESOLE, JE N'AI PAS COMPRIS</li><li>DESOLE, MES REPONSES SONT LIMITES</li><li>DESOLE, JE NE CONNAIS PAS CETTE REQUETE</li></random></template></category>
+</aiml>
