@@ -67,6 +67,7 @@ nano /etc/lirc/hardware.conf
     LIRCMD_CONF=""
 
 TEST reception
+
 sudo /etc/init.d/lirc stop
 mode2 -d /dev/lirc0
 
