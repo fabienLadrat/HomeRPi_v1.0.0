@@ -40,7 +40,8 @@ make
 
 sudo apt-get install lirc liblircclient-dev
 
-Edit file /etc/lirc/hardware.conf like this
+Edit file /etc/lirc/hardware.conf like this :
+
 nano /etc/lirc/hardware.conf
 
     # Arguments which will be used when launching lircd
@@ -66,7 +67,6 @@ nano /etc/lirc/hardware.conf
     LIRCMD_CONF=""
 
 TEST reception
-
 sudo /etc/init.d/lirc stop
 mode2 -d /dev/lirc0
 
