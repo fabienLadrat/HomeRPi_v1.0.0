@@ -39,7 +39,8 @@ cd rcswitch-pi
 make
 
 sudo apt-get install lirc liblircclient-dev
-# edit file /etc/lirc/hardware.conf like this
+
+** Edit file /etc/lirc/hardware.conf like this
 nano /etc/lirc/hardware.conf
 
     # Arguments which will be used when launching lircd
@@ -64,7 +65,7 @@ nano /etc/lirc/hardware.conf
     LIRCD_CONF=""
     LIRCMD_CONF=""
 
-# TEST reception 
+** TEST reception 
 sudo /etc/init.d/lirc stop
 mode2 -d /dev/lirc0
 
