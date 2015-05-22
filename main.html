@@ -9,110 +9,8 @@
 <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
 <script src="speak.js"></script>
-<style>
-	.ui-icon-my-speaker {
-		background-size: 36px 36px;
-	}
-	#info {
-		display : none;
-	}
-	.statelight {
-		float : left;
-	}
-	.centerDiv{
-		text-align:center;
-	}
-	.titreApp{
-		
-	}
-	.copyright{
-		color: #999 !important;
-		font-size: 0.6em !important;
-		margin-top: 10px !important;
-		font-style: normal !important;
-	}
-	
-	#results div{
-		border-color:#4F4F4F !important;
-	}
-	#final_span{
-		background-color:#4F4F4F;
-		border-color:#4F4F4F !important;
-		font-style : italic;
-	}
-	.ui-btn-active {
-		background-color:#CDCDCD !important;
-		border-color:#CDCDCD !important;
-		color:#4F4F4F !important;
-		text-shadow : none !important;
-		-moz-box-shadow: inset 0 0 3px      #CDCDCD  , 0 0 9px         #CDCDCD  !important;
-		-webkit-box-shadow: inset 0 0 3px   #CDCDCD  , 0 0 9px         #CDCDCD  !important;
-		box-shadow: inset 0 0 3px           #CDCDCD  , 0 0 9px         #CDCDCD  !important;
-	}
-	.enableLink{
-		background-color:#4F4F4F !important;
-		border-color:#4F4F4F !important;
-		border-right-color:#999 !important;
-		border-left-color:#999 !important;
-		color:#CDCDCD !important;
-		text-shadow : none !important;
-	}
-	.microbutton{
-		background-color:#4F4F4F !important;
-		border-color:#4F4F4F !important;
-	}
-	.switchbutton{
-		background-color:#CDCDCD !important;
-		border-color:#4F4F4F !important;
-	}
-	.ui-focus,
-	.ui-btn:focus {
-		-moz-box-shadow: inset 0 0 3px      #CDCDCD  , 0 0 9px         #CDCDCD  !important;
-		-webkit-box-shadow: inset 0 0 3px   #CDCDCD  , 0 0 9px         #CDCDCD  !important;
-		box-shadow: inset 0 0 3px           #CDCDCD  , 0 0 9px         #CDCDCD  !important;
-
-	}
-	.ui-input-text.ui-focus,
-	.ui-input-search.ui-focus {
-		-moz-box-shadow: 0 0 12px           #CDCDCD !important;
-		-webkit-box-shadow: 0 0 12px        #CDCDCD !important;
-		box-shadow: 0 0 12px                #CDCDCD !important;    
-
-	}
-	.main{
-		background: #7d7e7d; /* Old browsers */
-		background: -moz-linear-gradient(top,  #7d7e7d 0%, #0e0e0e 100%); /* FF3.6+ */
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7d7e7d), color-stop(100%,#0e0e0e)); /* Chrome,Safari4+ */
-		background: -webkit-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%); /* Chrome10+,Safari5.1+ */
-		background: -o-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%); /* Opera 11.10+ */
-		background: -ms-linear-gradient(top,  #7d7e7d 0%,#0e0e0e 100%); /* IE10+ */
-		background: linear-gradient(to bottom,  #7d7e7d 0%,#0e0e0e 100%); /* W3C */
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7d7e7d', endColorstr='#0e0e0e',GradientType=0 ); /* IE6-9 */
-	}
-	.devicename{
-		color: #CDCDCD !important;
-		font-style: normal !important;
-		text-shadow: 0 0 0 #CDCDCD; /* horizontal-offset vertical-offset 'blur' colour */
-	  -moz-text-shadow: 0 0 0 #CDCDCD;
-	  -webkit-text-shadow: 0 0 0 #CDCDCD;
-	}
-	.footerClass{
-		background-color:#4F4F4F !important;
-		border-color:#4F4F4F !important;
-		text-shadow : none !important;
-	}
-	.headerClass{
-		background-color:#4F4F4F !important;
-		border-color:#4F4F4F !important;
-		text-shadow : none !important;
-	}
-	.leftbuttonside{
-		border-left-color:#4F4F4F !important;
-	}
-
-</style>
+<link rel="stylesheet" type="text/css" href="app.css">
 <script>
- 
 	function ScaleContentToDevice(){
 		scroll(0, 0);
 		var divSelected = "speaker";
@@ -141,9 +39,10 @@
 	});
 	
 	socket.on('responseclickaction', function(data) {
-		$("#state_light_"+data.id).text(data.msg);
+		//alert(data.deviceType);
+		$("#state_"+data.deviceType+"_"+data.id).text(data.msg);
 	});
-
+	
 	$(document).on("pagecontainershow", function(){
 		ScaleContentToDevice(); 
 	});
@@ -152,23 +51,31 @@
 		ScaleContentToDevice();
 	});
 		
-	function refreshStateLight(socket){
-		$('span[id^="state_light_"]').each(function() {
+	function refreshStateDevice(socket){
+		$('span[id^="state_"]').each(function() {
 			var nb = this.id.substring(this.id.lastIndexOf("_") + 1);
 			socket.emit('firstconnection', nb);
 		});
 	}
 	
+	/*function refreshStateStore(socket){
+		$('span[id^="state_store_"]').each(function() {
+			var nb = this.id.substring(this.id.lastIndexOf("_") + 1);
+			socket.emit('firstconnectionstore', nb);
+		});
+	}*/
+	
 	$(document).ready(function() {
 
-		refreshStateLight(socket);
-
+		refreshStateDevice(socket);
+		
 		$("a").click(function(event) {
 			var id = event.target.id;
 			var tabCommand = id.split("_");
 			
-			if(id.indexOf("light")!=-1){
+			if(tabCommand.length == 3){
 				var deviceDetail={  
+					deviceType : tabCommand[0], 
 					id : tabCommand[1],  
 					state : tabCommand[2]  
 				}; 
@@ -213,7 +120,7 @@
 
 <div data-role="page" id="light" class="main">
 	<div data-role="header" data-id="hea1" data-position="fixed" class="centerDiv headerClass">HomeRPi FLAD</div>
-	<div data-role="content" class="ui-content right">
+	<div data-role="content" class="ui-content right center-light">
 		<div id="errordb"></div>
 	
 		<span id="state_light_1" class="devicename">Lampe 1 : </span>
@@ -247,8 +154,13 @@
 
 <div data-role="page" id="store" class="main">
 	<div data-role="header" data-id="hea1" data-position="fixed" class="centerDiv headerClass">HomeRPi FLAD</div>
-	<div data-role="content" class="ui-content right">
+	<div data-role="content" class="ui-content right center-store">
 		<span id="state_store_3" class="devicename">Volet roulant : </span>
+		<div data-role="controlgroup" class="center-store">
+			<a href="" id="store_3_on" class="clickbutton switchbutton storebutton" data-role="button">Up</a>
+			<a href="" id="store_3_stop" class="clickbutton switchbutton storebutton" data-role="button">Stop</a>
+			<a href="" id="store_3_off" class="clickbutton switchbutton storebutton" data-role="button">Down</a>
+		</div>
 	</div>
 	<div data-role="footer" data-id="foo1" data-position="fixed" data-tap-toggle="false" class="centerDiv footerClass">
 		<div data-role="navbar" data-id="nav1" data-position="fixed">

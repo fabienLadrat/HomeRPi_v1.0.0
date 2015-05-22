@@ -19,6 +19,7 @@ var dao = require('./scripts/js/daoUtils.js');
 var aimlInterpreter = new AIMLInterpreter({name:'homeRPi', age:'1'});
 var logger = log4js.getLogger('dev');
 var lastCommand = 'none';
+var lastState = 'none';
 var dataBaseFile ="./databases/homeRPi.db";
 var exists = fs.existsSync(dataBaseFile);
 var commandExecuted = false;
@@ -48,6 +49,7 @@ var app = express();
 // use this to load static and show main.html -----
 app.use(express.static(__dirname+'/speak'));
 app.use(express.static(__dirname+'/img'));
+app.use(express.static(__dirname+'/css'));
 
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/main.html');
@@ -86,10 +88,40 @@ io.sockets.on('connection', function (socket) {
 	socket.on('firstconnection', function (data) {
 		var id = data-1;
 		var db = new sqlite3.Database(dataBaseFile);
+		db.get("SELECT state_device, device from history_action where id="+id, function(err, row) {
+			var stateDevice = "N/A";
+			var deviceName = "";
+			if (err) {
+				socket.emit('responseclickaction', "error occurred");
+				return;
+			}
+			if(row.length!=0){
+				stateDevice = row.state_device;
+			}
+			//res.send("Lampe " + req.params.id + " : " + row.state_device);
+			if(row.device.indexOf("Lampe")!=-1){
+				deviceName = "light";
+			}else if(row.device.indexOf("Volet")!=-1){
+				deviceName = "store";
+			}
+			var dataResponse={  
+				id : data,  
+				state : row.state_device,
+				deviceType : deviceName,
+				msg : row.device + " : " + row.state_device
+			}; 
+			socket.emit('responseclickaction', dataResponse);
+		});
+		db.close();
+    });	
+	
+	/*socket.on('firstconnectionstore', function (data) {
+		var id = data-1;
+		var db = new sqlite3.Database(dataBaseFile);
 		db.get("SELECT state_device from history_action where id="+id, function(err, row) {
 			var stateDevice = "N/A";
 			if (err) {
-				socket.emit('responseclickaction', "error occurred");
+				socket.emit('responseclickactionstore', "error occurred");
 				return;
 			}
 			if(row.length!=0){
@@ -99,24 +131,43 @@ io.sockets.on('connection', function (socket) {
 			var dataResponse={  
 				id : data,  
 				state : row.state_device,
-				msg : "Lampe " + data + " : " + row.state_device
+				msg : "Volet roulant : " + row.state_device
 			}; 
-			socket.emit('responseclickaction', dataResponse);
+			socket.emit('responseclickactionstore', dataResponse);
 		});
 		db.close();
-    });	
+    });	*/
 	
 	socket.on('clickaction', function (data) {
 		var id = data.id-1;
-		executeCommandChacon(id, data.state, "Lampe " + data.id);
+		var deviceName = "";
+		if(data.deviceType.indexOf("light")!=-1){
+			deviceName = "Lampe ";
+		}else if(data.deviceType.indexOf("store")!=-1){
+			deviceName = "Volet roulant ";
+		}
+		executeCommandChacon(id, data.state, deviceName + data.id);
 		var dataResponse={  
 			id : data.id,  
 			state : data.state,
-			msg : "Lampe " + data.id + " : " + data.state
+			deviceType : data.deviceType,
+			msg : deviceName + data.id + " : " + data.state
 		};
 		socket.emit('responseclickaction', dataResponse);
 		socket.broadcast.emit('responseclickaction', dataResponse);
     });	
+	
+	/*socket.on('clickactionstore', function (data) {
+		var id = data.id-1;
+		executeCommandChacon(id, data.state, "Volet roulant " + data.id);
+		var dataResponse={  
+			id : data.id,  
+			state : data.state,
+			msg : "Volet roulant " + data.id + " : " + data.state
+		};
+		socket.emit('responseclickactionstore', dataResponse);
+		socket.broadcast.emit('responseclickactionstore', dataResponse);
+    });	*/
 	
 	
 	// Quand le serveur reçoit un signal de type "speakmessage" du client    
@@ -183,28 +234,28 @@ function traiteActionMessageAiml(message){
 	if(message == 'ACTIONMESSAGE OUVERTURE DES VOLETS'){
 		storeOPEN(2);
 		numeroRecepteur = 2;
-		device_state = 'open';
-		device_name = 'store';
+		device_state = 'opened';
+		device_name = 'Volet roulant';
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE FERMETURE DES VOLETS'){
 		storeCLOSE(2);
 		numeroRecepteur = 2;
-		device_state = 'close';
-		device_name = 'store';
+		device_state = 'closed';
+		device_name = 'Volet roulant';
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE ALLUMER TOUTES LES LAMPES'){
 		lightON(0);
 		lightON(1);
-		device_name = 'lampes';
+		device_name = 'Lampes';
 		numeroRecepteur = 4;
 		device_state = 'on';
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE ALLUMER LAMPE 1'){
 		lightON(0);
-		device_name = 'lampe 1';
+		device_name = 'Lampe 1';
 		numeroRecepteur = 0;
 		device_state = 'on';
 		commandExecuted = true;
@@ -212,14 +263,14 @@ function traiteActionMessageAiml(message){
 	if(message == 'ACTIONMESSAGE ALLUMER LAMPE 2'){
 		lightON(1);
 		numeroRecepteur = 1;
-		device_name = 'lampe 2';
+		device_name = 'Lampe 2';
 		device_state = 'on';
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE ETEINDRE TOUTES LES LAMPES'){
 		lightOFF(0);
 		lightOFF(1);
-		device_name = 'lampes';
+		device_name = 'Lampes';
 		numeroRecepteur = 4;
 		device_state = 'off';
 		commandExecuted = true;
@@ -228,14 +279,14 @@ function traiteActionMessageAiml(message){
 		lightOFF(0);
 		numeroRecepteur = 0;
 		device_state = 'off';
-		device_name = 'lampe 1';
+		device_name = 'Lampe 1';
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE ETEINDRE LAMPE 2'){
 		lightOFF(1);
 		numeroRecepteur = 1;
 		device_state = 'off';
-		device_name = 'lampe 2';
+		device_name = 'Lampe 2';
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE MAJ XBMC'){
@@ -264,9 +315,18 @@ function traiteActionMessageSpeak(message){
 *
 */
 function executeCommandChacon(id, state, device_name){
-	lastCommand = './hcc/hcc/radioEmission 7 16801622 ' + id + ' ' + state;
-	dao.insertOrUpdateCmd(lastCommand, id, device_name, state, "", "");
-	execSync(lastCommand);
+	var actualCommand = './hcc/hcc/radioEmission 7 16801622 ' + id + ' ' + state;
+	if(state == "stop"){
+		actualCommand = lastCommand;
+		lastCommand = "none";
+	}
+	if((state == "stop" && actualCommand != "none") || lastCommand != actualCommand){
+		dao.insertOrUpdateCmd(actualCommand, id, device_name, state, "", "");
+		execSync(actualCommand);
+	}
+	if(state != "stop"){
+		lastCommand = actualCommand;
+	}
 }
 
 /*
