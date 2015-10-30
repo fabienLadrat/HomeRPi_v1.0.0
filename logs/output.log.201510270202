@@ -1,0 +1,36 @@
+[2015-10-26 02:03:24.290] [DEBUG] dev - Secure Express server listening on port 9093
+[2015-10-26 02:03:25.564] [DEBUG] dev - SALUT FABIEN!
+[2015-10-26 02:03:31.389] [DEBUG] dev - envoi notification ok
+[2015-10-26 07:00:35.853] [DEBUG] dev - Reveil en cours...
+[2015-10-26 07:00:37.444] [DEBUG] dev - A M�rignac, la temp�rature est de 10.755555555555555�C
+[2015-10-26 07:00:37.448] [DEBUG] dev - Light rain tomorrow through Sunday, with temperatures falling to 63°F on Wednesday.
+[2015-10-26 07:00:37.453] [DEBUG] dev - Le vent souffle legerement aujourd'hui
+[2015-10-26 07:33:27.856] [DEBUG] dev - startOfDay() : Ouverture des stores...
+[2015-10-26 07:33:28.513] [DEBUG] dev - nb row for id 4 : 0
+[2015-10-26 07:33:36.443] [DEBUG] dev - envoi notification ok
+[2015-10-26 11:36:53.232] [DEBUG] dev - 80.12.63.188/tjyYlqOqBOpoEMO-AAAA est connecté !
+[2015-10-26 12:08:11.255] [DEBUG] dev - at home !!
+[2015-10-26 12:08:18.856] [DEBUG] dev - envoi notification ok
+[2015-10-26 12:08:43.371] [DEBUG] dev - at home !!
+[2015-10-26 12:08:43.857] [DEBUG] dev - envoi notification ok
+[2015-10-26 14:05:04.406] [DEBUG] dev - envoi notification ok
+[2015-10-26 14:06:33.031] [DEBUG] dev - envoi notification ok
+[2015-10-26 18:03:33.047] [DEBUG] dev - endOfDay() : Fermeture des stores...
+[2015-10-26 18:03:33.650] [DEBUG] dev - nb row for id 4 : 1
+[2015-10-26 18:03:34.144] [DEBUG] dev - envoi notification ok
+[2015-10-26 19:43:48.611] [DEBUG] dev - at home !!
+[2015-10-26 19:43:49.764] [DEBUG] dev - nb row for id 0 : 1
+[2015-10-26 19:43:49.774] [DEBUG] dev - nb row for id 1 : 1
+[2015-10-26 19:43:50.214] [DEBUG] dev - envoi notification ok
+[2015-10-26 19:46:30.861] [DEBUG] dev - at home !!
+[2015-10-26 19:46:32.012] [DEBUG] dev - nb row for id 0 : 1
+[2015-10-26 19:46:32.022] [DEBUG] dev - nb row for id 1 : 1
+[2015-10-26 19:46:32.470] [DEBUG] dev - envoi notification ok
+[2015-10-26 23:33:38.664] [DEBUG] dev - at home !!
+[2015-10-26 23:33:39.809] [DEBUG] dev - nb row for id 0 : 1
+[2015-10-26 23:33:39.818] [DEBUG] dev - nb row for id 1 : 1
+[2015-10-26 23:33:40.312] [DEBUG] dev - envoi notification ok
+[2015-10-26 23:34:08.766] [DEBUG] dev - at home !!
+[2015-10-26 23:34:09.917] [DEBUG] dev - nb row for id 0 : 1
+[2015-10-26 23:34:09.926] [DEBUG] dev - nb row for id 1 : 1
+[2015-10-26 23:34:10.402] [DEBUG] dev - envoi notification ok

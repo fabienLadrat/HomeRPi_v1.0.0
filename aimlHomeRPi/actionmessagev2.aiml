@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml version="1.0">
+
+<category><pattern>* FERMETURE * VOLET* *</pattern><template>ACTIONMESSAGE FERMETURE DES VOLETS</template></category>
+<category><pattern>* OUVERTURE * VOLET* *</pattern><template>ACTIONMESSAGE OUVERTURE DES VOLETS</template></category>
+<category><pattern>* *FERME* * VOLET* *</pattern><template>ACTIONMESSAGE FERMETURE DES VOLETS</template></category>
+<category><pattern>* *OUVR* * VOLET* *</pattern><template>ACTIONMESSAGE OUVERTURE DES VOLETS</template></category>
+
+<category><pattern>* FERMETURE * STORE* *</pattern><template>ACTIONMESSAGE FERMETURE DES VOLETS</template></category>
+<category><pattern>* OUVERTURE * STORE* *</pattern><template>ACTIONMESSAGE OUVERTURE DES VOLETS</template></category>
+<category><pattern>* *FERME* * STORE* *</pattern><template>ACTIONMESSAGE FERMETURE DES VOLETS</template></category>
+<category><pattern>* *OUVR* * STORE* *</pattern><template>ACTIONMESSAGE OUVERTURE DES VOLETS</template></category>
+
+<category><pattern>* ALLUM* UNE LAMPE* *</pattern><template><random><li>ACTIONMESSAGE ALLUMER LAMPE 1</li><li>ACTIONMESSAGE ALLUMER LAMPE 2</li></random></template></category>
+
+<category><pattern>* ALLUM* * LAMPE* * DROITE</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 2</template></category>
+<category><pattern>* ALLUM* * LAMPE* * BAR</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 2</template></category>
+<category><pattern>* ALLUM* * LAMPE* * 2</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 2</template></category>
+<category><pattern>* ALLUM* * LAMPE* * DEUX</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 2</template></category>
+
+<category><pattern>* ALLUM* * LAMPE* * GAUCHE</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 1</template></category>
+<category><pattern>* ALLUM* * LAMPE* * FENETRE</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 1</template></category>
+<category><pattern>* ALLUM* * LAMPE* * VITREE</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 1</template></category>
+<category><pattern>* ALLUM* * LAMPE* * VITRE</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 1</template></category>
+<category><pattern>* ALLUM* * LAMPE* * 1</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 1</template></category>
+<category><pattern>* ALLUM* * LAMPE* * UN</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 1</template></category>
+<category><pattern>* ALLUM* * LAMPE* * UNE</pattern><template>ACTIONMESSAGE ALLUMER LAMPE 1</template></category>
+
+<category><pattern>* ALLUM* * LAMPE* *</pattern><template>ACTIONMESSAGE ALLUMER TOUTES LES LAMPES</template></category>
+
+<category><pattern>* ETEIN* UNE LAMPE* *</pattern><template><random><li>ACTIONMESSAGE ETEINDRE LAMPE 1</li><li>ACTIONMESSAGE ETEINDRE LAMPE 2</li></random></template></category>
+
+<category><pattern>* ETEIN* * LAMPE* * DROITE</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 2</template></category>
+<category><pattern>* ETEIN* * LAMPE* * BAR</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 2</template></category>
+<category><pattern>* ETEIN* * LAMPE* * 2</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 2</template></category>
+<category><pattern>* ETEIN* * LAMPE* * DEUX</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 2</template></category>
+
+<category><pattern>* ETEIN* * LAMPE* * GAUCHE</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 1</template></category>
+<category><pattern>* ETEIN* * LAMPE* * FENETRE</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 1</template></category>
+<category><pattern>* ETEIN* * LAMPE* * VITREE</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 1</template></category>
+<category><pattern>* ETEIN* * LAMPE* * VITRE</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 1</template></category>
+<category><pattern>* ETEIN* * LAMPE* * 1</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 1</template></category>
+<category><pattern>* ETEIN* * LAMPE* * UN</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 1</template></category>
+<category><pattern>* ETEIN* * LAMPE* * UNE</pattern><template>ACTIONMESSAGE ETEINDRE LAMPE 1</template></category>
+
+<category><pattern>* ETEIN* * LAMPE* *</pattern><template>ACTIONMESSAGE ETEINDRE TOUTES LES LAMPES</template></category>
+
+<category><pattern>* MISE A JOUR * XBMC *</pattern><template>ACTIONMESSAGE MAJ XBMC</template></category>
+<category><pattern>* MAJ * XBMC *</pattern><template>ACTIONMESSAGE MAJ XBMC</template></category>
+<category><pattern>* MISE * JOUR * XBMC *</pattern><template>ACTIONMESSAGE MAJ XBMC</template></category>
+<category><pattern>* UPDATE * XBMC *</pattern><template>ACTIONMESSAGE MAJ XBMC</template></category>
+
+<category><pattern>* STOP *</pattern><template>ACTIONMESSAGE STOP STORE</template></category>
+<category><pattern>* STAP *</pattern><template>ACTIONMESSAGE STOP STORE</template></category>
+<category><pattern>* TOP *</pattern><template>ACTIONMESSAGE STOP STORE</template></category>
+<category><pattern>* TAP *</pattern><template>ACTIONMESSAGE STOP STORE</template></category>
+<category><pattern>* ARRET *</pattern><template>ACTIONMESSAGE STOP STORE</template></category>
+	
+</aiml>

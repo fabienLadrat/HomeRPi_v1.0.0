@@ -1,0 +1,14 @@
+[2015-10-30 02:03:24.506] [DEBUG] dev - Secure Express server listening on port 9093
+[2015-10-30 02:03:25.786] [DEBUG] dev - SALUT FABIEN!
+[2015-10-30 02:03:32.638] [DEBUG] dev - envoi notification ok
+[2015-10-30 07:00:35.864] [DEBUG] dev - Reveil en cours...
+[2015-10-30 07:00:37.416] [DEBUG] dev - A M�rignac, la temp�rature est de 11.094444444444443�C
+[2015-10-30 07:00:37.423] [DEBUG] dev - Drizzle on Monday and Tuesday, with temperatures falling to 67°F on Thursday.
+[2015-10-30 07:00:37.428] [DEBUG] dev - Le vent souffle legerement aujourd'hui
+[2015-10-30 07:43:27.890] [DEBUG] dev - startOfDay() : Ouverture des stores...
+[2015-10-30 07:43:28.549] [DEBUG] dev - nb row for id 4 : 1
+[2015-10-30 07:43:38.462] [DEBUG] dev - envoi notification ok
+[2015-10-30 08:15:07.517] [DEBUG] dev - at home !!
+[2015-10-30 08:15:37.604] [DEBUG] dev - at home !!
+[2015-10-30 08:44:13.664] [DEBUG] dev - envoi notification ok
+[2015-10-30 08:45:45.823] [DEBUG] dev - envoi notification ok

@@ -26,8 +26,6 @@ var commandExecuted = false;
 var heure_alarme = 7;
 var minute_alarme = 0;
 
-var weatherCode = new Array("Thunderstorm", "Drizzle", "Rain", "Snow", "Atmosphere", "Clouds", "Extreme", "Additional");
-
 log4js.configure({
     appenders: [{type: 'console'},
                 {type: 'file', filename: 'logs/output.log', category: 'dev'}]
@@ -43,27 +41,19 @@ if(!exists) {
   logger.debug("The database 'homeRPi.db' does not exist ! Please, create it and relaunch the server :)");
   process.exit(1);
 }
-
+//var router = express.Router();
+var routes = require('./scripts/js/router');
 var app = express();
+
+app.use('/', routes);
 
 // use this to load static and show main.html -----
 app.use(express.static(__dirname+'/speak'));
 app.use(express.static(__dirname+'/img'));
 app.use(express.static(__dirname+'/css'));
-
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/main.html');
-});
-
-// ssl security to allow automatically microphone usage => not working correctly
-var sslOptions = {
-  key: fs.readFileSync('./ssl/server.key'),
-  cert: fs.readFileSync('./ssl/server.crt'),
-  requestCert: true,
-  rejectUnauthorized: false
-};
  
-var server = https.createServer(sslOptions,app);
+//var server = https.createServer(sslOptions,app);
+var server = http.createServer(app);
 
 // Chargement de socket.io
 var io = require('socket.io').listen(server);
@@ -79,6 +69,8 @@ io.sockets.on('connection', function (socket) {
 	socketID = socket.id;
 	// Quand on client se connecte, on le note dans la console
 	logger.debug(socket.session + '/' + socketID + ' est connecté !');
+	
+	socket.emit('newmessage', "Bienvenue " + socketID);
 
     // Quand le serveur reçoit un signal de type "message" du client    
     socket.on('message', function (message) {
@@ -86,90 +78,29 @@ io.sockets.on('connection', function (socket) {
     });	
 	
 	socket.on('firstconnection', function (data) {
-		var id = data-1;
-		var db = new sqlite3.Database(dataBaseFile);
-		db.get("SELECT state_device, device from history_action where id="+id, function(err, row) {
-			var stateDevice = "N/A";
-			var deviceName = "";
-			if (err) {
-				socket.emit('responseclickaction', "error occurred");
-				return;
-			}
-			if(row.length!=0){
-				stateDevice = row.state_device;
-			}
-			//res.send("Lampe " + req.params.id + " : " + row.state_device);
-			if(row.device.indexOf("Lampe")!=-1){
-				deviceName = "light";
-			}else if(row.device.indexOf("Volet")!=-1){
-				deviceName = "store";
-			}
-			var dataResponse={  
-				id : data,  
-				state : row.state_device,
-				deviceType : deviceName,
-				msg : row.device + " : " + row.state_device
-			}; 
-			socket.emit('responseclickaction', dataResponse);
+		dao.getFirstConnection(data, function (dataResponse) {
+			//logger.debug("socket firstconnection");
+			socket.emit('responseclickaction', dataResponse);			
 		});
-		db.close();
     });	
-	
-	/*socket.on('firstconnectionstore', function (data) {
-		var id = data-1;
-		var db = new sqlite3.Database(dataBaseFile);
-		db.get("SELECT state_device from history_action where id="+id, function(err, row) {
-			var stateDevice = "N/A";
-			if (err) {
-				socket.emit('responseclickactionstore', "error occurred");
-				return;
-			}
-			if(row.length!=0){
-				stateDevice = row.state_device;
-			}
-			//res.send("Lampe " + req.params.id + " : " + row.state_device);
-			var dataResponse={  
-				id : data,  
-				state : row.state_device,
-				msg : "Volet roulant : " + row.state_device
-			}; 
-			socket.emit('responseclickactionstore', dataResponse);
-		});
-		db.close();
-    });	*/
+
 	
 	socket.on('clickaction', function (data) {
-		var id = data.id-1;
-		var deviceName = "";
-		if(data.deviceType.indexOf("light")!=-1){
-			deviceName = "Lampe ";
-		}else if(data.deviceType.indexOf("store")!=-1){
-			deviceName = "Volet roulant ";
-		}
-		executeCommandChacon(id, data.state, deviceName + data.id);
-		var dataResponse={  
-			id : data.id,  
-			state : data.state,
-			deviceType : data.deviceType,
-			msg : deviceName + data.id + " : " + data.state
-		};
-		socket.emit('responseclickaction', dataResponse);
-		socket.broadcast.emit('responseclickaction', dataResponse);
+		dao.getClickAction(data, function (dataResponse) {
+			tools.executeCommandChacon(dataResponse.physical_id, dataResponse.state, dataResponse.device_libelle, "", "");
+			socket.emit('responseclickaction', dataResponse);
+			socket.broadcast.emit('responseclickaction', dataResponse);				
+		});
     });	
 	
-	/*socket.on('clickactionstore', function (data) {
-		var id = data.id-1;
-		executeCommandChacon(id, data.state, "Volet roulant " + data.id);
-		var dataResponse={  
-			id : data.id,  
-			state : data.state,
-			msg : "Volet roulant " + data.id + " : " + data.state
-		};
-		socket.emit('responseclickactionstore', dataResponse);
-		socket.broadcast.emit('responseclickactionstore', dataResponse);
-    });	*/
-	
-	
+	socket.on('getDeviceList', function (callback) {
+		dao.getDeviceList("", function (dataResponse) {
+			dataResponse.forEach(function(device) {
+				logger.debug(device.id + " | " + device.deviceLibelle + " | " + device.physicalId + " | " + device.deviceName);
+			});
+		});
+    });	
+
 	// Quand le serveur reçoit un signal de type "speakmessage" du client    
 	socket.on('speakmessage', function (message) {
 		botResponse = "";
@@ -183,6 +114,13 @@ io.sockets.on('connection', function (socket) {
 		}
 		socket.emit('message', botResponse);
     });	
+	
+	
+	socket.on('localisationmessage', function (msg) {
+		logger.debug(msg);
+    });
+	
+	
 });
 
 server.listen('9093', function(){
@@ -198,26 +136,121 @@ var callbackSpeakAction = function(answer, wildCardArray){
 	}
 };
 
-// on startup of server, call alarm function
-alarm();
-// updating xbmc database
-majXBMC();
 // set my name to aiml
 aimlInterpreter.findAnswerInLoadedAIMLFiles('je me nomme Fabien', callbackSpeakAction);
+// init variable to stock sun hour 
+var sunHour = tools.getSunHour();
+// call nodeCron function
+nodeCronReveil();
+nodeCronActivities();
+// updating xbmc database
+//majXBMC();
 
-function alarm(){
-	check_alarm(function(){
-		setTimeout (alarm, 1000 * 60);
+tools.sendNotification("Lancement du serveur nodejs OK !");
+
+function nodeCronReveil(){
+	check_nodeCronReveil(function(){
+		setTimeout (nodeCronReveil, 1000 * 60);
 	});
 }
 
-function check_alarm(callback) {
-    if (tools.isWakeUp()===true && tools.isNoWorkingDay()===false) {
-        logger.debug("Reveil en cours...");
-		storeOPEN(2);
-        tools.smart_wakeup();
-    } 
+function nodeCronActivities(){
+	check_nodeCronActivities(function(){
+		setTimeout (nodeCronActivities, 5000 * 60);
+	});
+}
+
+/*
+* fonction appelée toute les minutes pour effectuer des traitements cron
+*
+*/
+function check_nodeCronReveil(callback) {
+    wakeUp();
 	callback();
+}
+
+/*
+* fonction appelée toute les 5 minutes pour effectuer des traitements cron
+*
+*/
+function check_nodeCronActivities(callback) {
+	if(typeof sunHour !== 'undefined'){
+		startOfDay();
+		endOfDay();
+	}
+	callback();
+}
+
+/*
+* fonction reveil, meteo et ouverture store
+*/
+function wakeUp(){
+	if (tools.isWakeUp()===true && tools.isNoWorkingDay()===false) {
+        logger.debug("Reveil en cours...");
+		startOfDay();
+		// get etat store
+		/*dao.getParamValueByName('etat_store', function (etat) {
+			logger.debug("wakeUp() : etatStore : " + etat);
+			if(typeof sunHour !== 'undefined'){
+				if((etat === "closed" || etat === "N/A" ) && tools.isTimeToOpenStore(sunHour)===true){
+					logger.debug("wakeUp() : Ouverture des stores...");
+					var message = "CRON OUVERTURE DES VOLETS";
+					tools.executeCommandChacon(2, "on", "Volet roulant", message, message);
+					dao.updateParamsTable("etat_store","opened");
+					tools.sendNotification("Ouverture des stores");
+				}
+			}			
+		});*/
+		// TODO allumer lampe chambre
+		tools.smart_wakeup();
+    } 
+}
+
+/*
+* fonction qui check si faut ouvrir les volets
+*/
+function startOfDay(){
+	// get etat store
+	dao.getParamValueByName('etat_store', function (etat) {
+		//logger.debug("startOfDay() : etatStore : " + etat);
+		if(typeof sunHour !== 'undefined'){
+			if((etat === "closed" || etat === "N/A" ) && tools.isTimeToOpenStore(sunHour)===true 
+				&& tools.isNoWorkingDay()===false){
+				logger.debug("startOfDay() : Ouverture des stores...");
+				var message = "CRON OUVERTURE DES VOLETS";
+				tools.executeCommandChacon(4, "on", "Volet roulant", message, message);
+				dao.updateParamsTable("etat_store","opened");
+				tools.sendNotification("Ouverture des stores");
+				// TODO implemente extinction lumiere salon si necessaire
+			}
+		}
+	});
+}
+
+/*
+* fonction qui check si faut fermer les volets
+*/
+function endOfDay(){
+	// get etat store
+	dao.getParamValueByName('etat_store', function (etat) {
+		//logger.debug("endOfDay() : etatStore : " + etat);
+		if(typeof sunHour !== 'undefined'){
+			if((etat === "opened" || etat === "N/A" ) && tools.isTimeToCloseStore(sunHour)===true){
+				logger.debug("endOfDay() : Fermeture des stores...");
+				var message = "CRON FERMETURE DES VOLETS";
+				tools.executeCommandChacon(4, "off", "Volet roulant", message, message);
+				dao.updateParamsTable("etat_store","closed");
+				dao.getParamValueByName('home_presence', function (homePresence) {
+					if(homePresence === 'true'){
+						tools.executeCommandChacon(5, "on", "Lampe 1", message, message);
+						tools.executeCommandChacon(6, "on", "Lampe 2", message, message);
+						message = ", allumage du salon.";
+					}
+				});
+				tools.sendNotification("Fermeture des stores" + message);
+			}	
+		}
+	});
 }
 
 function stopStore(){
@@ -227,77 +260,51 @@ function stopStore(){
 
 function traiteActionMessageAiml(message){
 	commandExecuted = false;
-	var numeroRecepteur = -1;
-	var device_state = -1;	
-	var device_name = "";
 	logger.debug("MESSAGE SENT : " + message);
 	if(message == 'ACTIONMESSAGE OUVERTURE DES VOLETS'){
-		storeOPEN(2);
-		numeroRecepteur = 2;
-		device_state = 'opened';
-		device_name = 'Volet roulant';
+		executeCommandChacon(4, 'on', 'Volet roulant', message, message);
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE FERMETURE DES VOLETS'){
-		storeCLOSE(2);
-		numeroRecepteur = 2;
-		device_state = 'closed';
-		device_name = 'Volet roulant';
+		executeCommandChacon(4, 'off', 'Volet roulant', message, message);
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE ALLUMER TOUTES LES LAMPES'){
-		lightON(0);
-		lightON(1);
-		device_name = 'Lampes';
-		numeroRecepteur = 4;
-		device_state = 'on';
+		executeCommandChacon(5, 'on', 'Lampe 1', message, message);
+		executeCommandChacon(6, 'on', 'Lampe 2', message, message);
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE ALLUMER LAMPE 1'){
-		lightON(0);
-		device_name = 'Lampe 1';
-		numeroRecepteur = 0;
-		device_state = 'on';
+		executeCommandChacon(5, 'on', 'Lampe 1', message, message);
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE ALLUMER LAMPE 2'){
-		lightON(1);
-		numeroRecepteur = 1;
-		device_name = 'Lampe 2';
-		device_state = 'on';
+		executeCommandChacon(6, 'on', 'Lampe 2', message, message);
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE ETEINDRE TOUTES LES LAMPES'){
-		lightOFF(0);
-		lightOFF(1);
-		device_name = 'Lampes';
-		numeroRecepteur = 4;
-		device_state = 'off';
+		executeCommandChacon(5, 'off', 'Lampe 1', message, message);
+		executeCommandChacon(6, 'off', 'Lampe 2', message, message);
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE ETEINDRE LAMPE 1'){
-		lightOFF(0);
-		numeroRecepteur = 0;
-		device_state = 'off';
-		device_name = 'Lampe 1';
+		executeCommandChacon(5, 'off', 'Lampe 1', message, message);
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE ETEINDRE LAMPE 2'){
-		lightOFF(1);
-		numeroRecepteur = 1;
-		device_state = 'off';
-		device_name = 'Lampe 2';
+		executeCommandChacon(6, 'off', 'Lampe 2', message, message);
 		commandExecuted = true;
 	}
 	if(message == 'ACTIONMESSAGE MAJ XBMC'){
 		majXBMC();
 		commandExecuted = true;
+		dao.insertOrUpdateCmd(lastCommand, -1, device_name, device_state, message, message);
 	}
 	if(message == 'ACTIONMESSAGE STOP STORE'){
-		stopStore();
+		executeCommandChacon(4, 'stop', 'Volet roulant', message, message);
 		commandExecuted = true;
 	}
-	dao.insertOrUpdateCmd(lastCommand, numeroRecepteur, device_name, device_state, message, message);
+	//dao.insertOrUpdateCmd(lastCommand, numeroRecepteur, device_name, device_state, message, message);
 }
 
 function traiteActionMessageSpeak(message){
@@ -309,25 +316,6 @@ function traiteActionMessageSpeak(message){
 	return commandExecuted;
 }
 
-/*
-* fonction destinée a executer des commandes vers les recepteurs RF chacon
-* (ouverture store, allumer les lumieres...)
-*
-*/
-function executeCommandChacon(id, state, device_name){
-	var actualCommand = './hcc/hcc/radioEmission 7 16801622 ' + id + ' ' + state;
-	if(state == "stop"){
-		actualCommand = lastCommand;
-		lastCommand = "none";
-	}
-	if((state == "stop" && actualCommand != "none") || lastCommand != actualCommand){
-		dao.insertOrUpdateCmd(actualCommand, id, device_name, state, "", "");
-		execSync(actualCommand);
-	}
-	if(state != "stop"){
-		lastCommand = actualCommand;
-	}
-}
 
 /*
 * fonction destinée a executer des commandes vers les recepteurs IR
@@ -345,26 +333,6 @@ function executeCommandIR(){
 */
 function executeCommand(){
 
-}
-
-function storeOPEN(numeroStore){
-	lastCommand = './hcc/hcc/radioEmission 7 16801622 ' + numeroStore + ' on';
-	execSync(lastCommand);
-}
-
-function storeCLOSE(numeroStore){
-	lastCommand = './hcc/hcc/radioEmission 7 16801622 ' + numeroStore + ' off';
-	execSync(lastCommand);
-}
-
-function lightON(numeroLampe){
-	lastCommand = './hcc/hcc/radioEmission 7 16801622 ' + numeroLampe + ' on';
-	execSync(lastCommand);
-}
-
-function lightOFF(numeroLampe){
-	lastCommand = './hcc/hcc/radioEmission 7 16801622 ' + numeroLampe + ' off';
-	execSync(lastCommand);
 }
 
 function majXBMC(){

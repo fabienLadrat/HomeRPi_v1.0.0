@@ -1,0 +1,24 @@
+[2015-10-27 02:03:28.867] [DEBUG] dev - Secure Express server listening on port 9093
+[2015-10-27 02:03:29.878] [DEBUG] dev - envoi notification ok
+[2015-10-27 02:03:30.139] [DEBUG] dev - SALUT FABIEN!
+[2015-10-27 07:00:41.061] [DEBUG] dev - Reveil en cours...
+[2015-10-27 07:00:47.367] [DEBUG] dev - A M�rignac, la temp�rature est de 12.96111111111111�C
+[2015-10-27 07:00:47.371] [DEBUG] dev - Light rain throughout the week, with temperatures rising to 74°F on Friday.
+[2015-10-27 07:00:47.376] [DEBUG] dev - Le vent souffle legerement aujourd'hui
+[2015-10-27 07:38:32.385] [DEBUG] dev - startOfDay() : Ouverture des stores...
+[2015-10-27 07:38:33.029] [DEBUG] dev - nb row for id 4 : 1
+[2015-10-27 07:38:38.675] [DEBUG] dev - envoi notification ok
+[2015-10-27 08:57:09.483] [DEBUG] dev - envoi notification ok
+[2015-10-27 08:57:39.578] [DEBUG] dev - envoi notification ok
+[2015-10-27 11:50:03.497] [DEBUG] dev - 80.12.63.254/FdrLZlP9l7jETy29AAAA est connecté !
+[2015-10-27 12:10:01.689] [DEBUG] dev - at home !!
+[2015-10-27 12:10:31.776] [DEBUG] dev - at home !!
+[2015-10-27 13:39:14.837] [DEBUG] dev - envoi notification ok
+[2015-10-27 13:41:14.731] [DEBUG] dev - envoi notification ok
+[2015-10-27 17:55:43.627] [DEBUG] dev - 80.12.63.41/Bso2TArZeP8QbopxAAAB est connecté !
+[2015-10-27 18:03:37.539] [DEBUG] dev - endOfDay() : Fermeture des stores...
+[2015-10-27 18:03:38.143] [DEBUG] dev - nb row for id 4 : 1
+[2015-10-27 18:03:43.643] [DEBUG] dev - envoi notification ok
+[2015-10-27 18:17:32.519] [DEBUG] dev - envoi notification ok
+[2015-10-27 21:48:10.310] [DEBUG] dev - at home !!
+[2015-10-27 21:59:30.254] [DEBUG] dev - at home !!

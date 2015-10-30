@@ -1,0 +1,32 @@
+<html>
+<head>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.1.0/annyang.min.js"></script>
+	<script>
+		if (annyang) {
+  			// Let's define our first command. First the text we expect, and then the function it should call
+  			var commands = {
+			'show me *term': showFunction,
+    			'hello': function() {
+      				//$('#tpsreport').animate({bottom: '-100px'});
+					//alert("boujour toi aussi");
+					var audio = new Audio();
+					audio.src ='http://translate.google.com/translate_tts?ie=utf-8&tl=en&q=Hello%20Fabien.';
+					audio.play();
+    				}
+  			};
+
+  			// Add our commands to annyang
+  			annyang.addCommands(commands);
+
+  			// Start listening. You can call this here, or attach this call to an event, button, etc.
+  			annyang.start();
+		}
+	var showFunction = function(term) {
+  		var url = '//
+  		alert($.getJSON(url));
+	}
+</script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+		<title>FLAD</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    </head>
+    <body>
+	<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+	<script>
+		var socket = io.connect('https://fabien1664.raspctl.com:9093');
+		socket.on('message', function(message) {
+			alert('Le serveur a un message pour vous : ' + message);
+		});
+		$(document).ready(function() {
+			$('#lighton').click(function () {
+				socket.emit('message', 'Allume les lampes');
+			});
+		});
+	</script>
+	<div data-role="page">
+		<div data-role="header">entete</div>
+		<div role="main" class="ui-content">
+			<p><input type="text" data-mini="true" placeholder="What's up?"></p>
+			<p><input type="button" class="ui-btn ui-shadow ui-corner-all"  value="Allume les lampes" id="lighton" /></p>
+		</div>
+		<div data-role="footer">bas de page</div>
+	</div>
+    </body>
+</html>

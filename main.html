@@ -8,7 +8,6 @@
 <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
-<script src="speak.js"></script>
 <link rel="stylesheet" type="text/css" href="app.css">
 <script>
 	function ScaleContentToDevice(){
@@ -29,9 +28,9 @@
 		//responsiveVoice.speak(msg,"French Female");
 	}
 		
-	var socket = io.connect('https://fabien1664.raspctl.com:9093');
+	var socket = io.connect('http://fabienladrat11.ddns.net:9093');
 	socket.on('message', function(message) {
-		alert(message);
+		alert("message : " + message);
 	});
 	
 	socket.on('errordb', function(data) {
@@ -40,7 +39,12 @@
 	
 	socket.on('responseclickaction', function(data) {
 		//alert(data.deviceType);
-		$("#state_"+data.deviceType+"_"+data.id).text(data.msg);
+		$("#state_"+data.deviceType).text(data.msg);
+	});
+	
+	socket.on('deviceListCallback', function(data) {
+		//alert(data[0].deviceLibelle);
+		//$("#callback").append(data[0].deviceLibelle);
 	});
 	
 	$(document).on("pagecontainershow", function(){
@@ -53,9 +57,14 @@
 		
 	function refreshStateDevice(socket){
 		$('span[id^="state_"]').each(function() {
-			var nb = this.id.substring(this.id.lastIndexOf("_") + 1);
+			var nb = this.id.substring(this.id.indexOf("_") + 1);
 			socket.emit('firstconnection', nb);
 		});
+	}
+	
+	function getDeviceList(socket){
+	//	alert("1");
+	//	socket.emit('getDeviceList');
 	}
 	
 	/*function refreshStateStore(socket){
@@ -66,7 +75,7 @@
 	}*/
 	
 	$(document).ready(function() {
-
+		getDeviceList(socket);
 		refreshStateDevice(socket);
 		
 		$("a").click(function(event) {
@@ -115,6 +124,8 @@
 		</div>
 		<p class="copyright">&copy; Copyright 2015 Fabien LADRAT</p>
 	</div>
+	<div id="callback">
+	</div>
 </div>
 
 
@@ -133,10 +144,10 @@
 			<a href="" id="light_2_on" class="clickbutton switchbutton" data-role="button">On</a>
 			<a href="" id="light_2_off" class="clickbutton switchbutton" data-role="button">Off</a>
 		</div>
-		<span id="state_light_4" class="devicename">Lampe 4 : </span>
+		<span id="state_light_3" class="devicename">Lampe 3 : </span>
 		<div data-role="controlgroup" data-type="horizontal">
-			<a href="" id="light_4_on" class="clickbutton switchbutton" data-role="button">On</a>
-			<a href="" id="light_4_off" class="clickbutton switchbutton" data-role="button">Off</a>
+			<a href="" id="light_3_on" class="clickbutton switchbutton" data-role="button">On</a>
+			<a href="" id="light_3_off" class="clickbutton switchbutton" data-role="button">Off</a>
 		</div>
 	</div>
 	<div data-role="footer" data-id="foo1" data-position="fixed" data-tap-toggle="false" class="centerDiv footerClass">
@@ -155,11 +166,11 @@
 <div data-role="page" id="store" class="main">
 	<div data-role="header" data-id="hea1" data-position="fixed" class="centerDiv headerClass">HomeRPi FLAD</div>
 	<div data-role="content" class="ui-content right center-store">
-		<span id="state_store_3" class="devicename">Volet roulant : </span>
+		<span id="state_store_1" class="devicename">Volet roulant : </span>
 		<div data-role="controlgroup" class="center-store">
-			<a href="" id="store_3_on" class="clickbutton switchbutton storebutton" data-role="button">Up</a>
-			<a href="" id="store_3_stop" class="clickbutton switchbutton storebutton" data-role="button">Stop</a>
-			<a href="" id="store_3_off" class="clickbutton switchbutton storebutton" data-role="button">Down</a>
+			<a href="" id="store_1_on" class="clickbutton switchbutton storebutton" data-role="button">Up</a>
+			<a href="" id="store_1_stop" class="clickbutton switchbutton storebutton" data-role="button">Stop</a>
+			<a href="" id="store_1_off" class="clickbutton switchbutton storebutton" data-role="button">Down</a>
 		</div>
 	</div>
 	<div data-role="footer" data-id="foo1" data-position="fixed" data-tap-toggle="false" class="centerDiv footerClass">
@@ -177,9 +188,17 @@
 
 <div data-role="page" id="clim" class="main">
 	<div data-role="header" data-id="hea1" data-position="fixed" class="centerDiv headerClass">HomeRPi FLAD</div>
-	<div data-role="content" class="ui-content right">
+	<div data-role="content" class="ui-content right center-ventil">
 		<span id="state_clim_1" class="devicename">Climatisation : </span>
-		<span id="state_ventilateur_1" class="devicename">Ventilation : </span>
+		<div data-role="controlgroup" data-type="horizontal">
+			<a href="" id="clim_1_on" class="clickbutton switchbutton" data-role="button">On</a>
+			<a href="" id="clim_1_off" class="clickbutton switchbutton" data-role="button">Off</a>
+		</div>
+		<span id="state_ventilateur_1" class="devicename">Ventilateur 1 : </span>
+		<div data-role="controlgroup" data-type="horizontal">
+			<a href="" id="ventilateur_1_on" class="clickbutton switchbutton" data-role="button">On</a>
+			<a href="" id="ventilateur_1_off" class="clickbutton switchbutton" data-role="button">Off</a>
+		</div>
 	</div>
 	<div data-role="footer" data-id="foo1" data-position="fixed" data-tap-toggle="false" class="centerDiv footerClass">
 		<div data-role="navbar" data-id="nav1" data-position="fixed">

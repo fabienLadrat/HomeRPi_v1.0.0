@@ -31,11 +31,11 @@ pathSalon = "/tmp/remote_database_dir_salon"
 
 if os.path.exists(pathChambre) == False:
 	os.popen("mkdir -p /tmp/remote_database_dir_chambre")
-	os.popen("mount -t cifs //192.168.0.15/userdata -o user=root -o pass=openelec /tmp/remote_database_dir_chambre")
+	os.popen("mount -t cifs //192.168.0.11/userdata -o user=root -o pass=openelec /tmp/remote_database_dir_chambre")
 
 if os.path.exists(pathSalon) == False:
 	os.popen("mkdir -p /tmp/remote_database_dir_salon")
-	os.popen("mount -t cifs //192.168.0.12/userdata -o user=root -o pass=openelec /tmp/remote_database_dir_salon")
+	os.popen("mount -t cifs //192.168.0.13/userdata -o user=root -o pass=openelec /tmp/remote_database_dir_salon")
 	
 con = None
 conC = None

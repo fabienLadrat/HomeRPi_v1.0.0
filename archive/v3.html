@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Speak and command FLAD</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+<style>
+	.ui-icon-my-speaker {
+
+		background-size: 36px 36px;
+	}
+</style>
+<script>
+	var socket = io.connect('https://fabien1664.raspctl.com:9093');
+	socket.on('message', function(message) {
+		alert('Le serveur a un message pour vous : ' + message);
+	});
+	$(document).ready(function() {
+
+		$('#dialOn').click(function () {
+			socket.emit('speakmessage', $("#final_span").val());
+		});
+		
+		$("#final_span").change(function() {
+		  socket.emit('actionmessage', $("#final_span").val());
+		});
+	});
+
+</script>
+<div id="info">
+  <p id="info_start">Click on the microphone icon and begin speaking.</p>
+  <p id="info_speak_now">Speak now.</p>
+  <p id="info_no_speech">No speech was detected. You may need to adjust your
+    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+      microphone settings</a>. Reload the page</p>
+  <p id="info_no_microphone" style="display:none">
+    No microphone was found. Ensure that a microphone is installed and that
+    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+    microphone settings</a> are configured correctly.</p>
+  <p id="info_allow">Click the "Allow" button above to enable your microphone.</p>
+  <p id="info_denied">Permission to use microphone was denied.</p>
+  <p id="info_blocked">Permission to use microphone is blocked. To change,
+    go to chrome://settings/contentExceptions#media-stream</p>
+  <p id="info_upgrade">Web Speech API is not supported by this browser.
+     Upgrade to <a href="//www.google.com/chrome">Chrome</a>
+     version 25 or later.</p>
+</div>
+<div data-role="page">
+	<div data-role="header">entete</div>
+	<div role="main" class="ui-content right">
+	
+		<a href="#" data-role="button" data-inline="true" data-mini="true" onclick="startButton();"><img id="speaker_id" src="mic.gif"></a>
+		
+		<div id="results" class="ui-grid-b">
+			<!--<span id="final_span" class="final"></span>
+			<div id="final_span" class="final"></div>-->
+			<input type="text" name="name_span" id="final_span" data-mini="true"/>
+			<!--<span id="interim_span" class="interim"></span>-->
+		</div>	
+		
+		<p><input type="button" class="ui-btn ui-shadow ui-corner-all" value="DIAL !" id="dialOn"/></p>
+	</div>
+	<div data-role="footer">bas de page</div>
+</div>
+
+
+
+<script src="speak.js"></script>

@@ -1,0 +1,35 @@
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.6.0/annyang.min.js"></script>
+	<script>
+		if (annyang) {
+  			// Let's define our first command. First the text we expect, and then the function it should call
+  			var commands = {
+			'light': function(){alert("ca brille!!");},
+			'show me *term': showFunction,
+    		'hello': function() {
+      				//$('#tpsreport').animate({bottom: '-100px'});
+					//alert("boujour toi aussi");
+					var audio = new Audio();
+					audio.src ='http://translate.google.com/translate_tts?ie=utf-8&tl=fr&q=Salut%20Fabien.';
+					audio.play();
+    				}
+  			};
+
+  			// Add our commands to annyang
+  			annyang.addCommands(commands);
+
+  			// Start listening. You can call this here, or attach this call to an event, button, etc.
+  			annyang.start();
+		}
+	var showFunction = function(term) {
+  		//var url = '//api.flickr.com/services/rest/?tags='+term;
+  		alert(term);
+	}
+</script>
+</head>
+<body>
+</body>
+</html>
