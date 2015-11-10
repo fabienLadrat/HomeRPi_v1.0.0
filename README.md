@@ -1,48 +1,57 @@
 # HomeRPi_v1.0.0
-HomeRPi domotic project
+#### HomeRPi domotic project  
 
-Installation of nodejs and npm on rapsberry pi
+#### Installation of nodejs and npm on rapsberry pi  
 
-wget http://nodejs.org/dist/v0.10.28/node-v0.10.28-linux-arm-pi.tar.gz
-tar -xzf node-v0.10.28-linux-arm-pi.tar.gz
-mkdir /opt/node
-nano /etc/profile
+wget http://nodejs.org/dist/v0.10.28/node-v0.10.28-linux-arm-pi.tar.gz  
+tar -xzf node-v0.10.28-linux-arm-pi.tar.gz  
+mkdir /opt/node  
+nano /etc/profile  
 
-add into /etc/profile 
-    PATH=$PATH:/opt/node/bin
-before
-    export PATH
+add into /etc/profile  
+    PATH=$PATH:/opt/node/bin  
+before  
+    export PATH  
 
-sudo cp -r node-v0.10.28-linux-arm-pi/* /opt/node
-cd /var/www
+sudo cp -r node-v0.10.28-linux-arm-pi/* /opt/node  
+cd /var/www  
 
-node module installation in node_modules directory
-npm install express
-npm install socket.io
-npm install annyang
-npm install request
-npm install sqlite3
-npm install daemon
-npm install log4js
-npm install ejs
+#### node module installation in node_modules directory  
+npm install express  
+npm install socket.io  
+npm install request  
+npm install sqlite3  
+npm install daemon  
+npm install log4js  
+npm install ejs  
+npm install aimlinterpreter  
+npm install android-gcm  
+npm install body-parser  
+npm install date-utils  
+npm install dom-js  
+npm install exec-sync  
+npm install sqli  
+npm install sync-request  
 
-Installation of libraries to manage gpio, lirc
+#### Installation of libraries to manage gpio, lirc  
 
-sudo apt-get install git-core
+sudo apt-get install git-core  
 
-git clone git://git.drogon.net/wiringPi
-cd wiringPi
-./build
+git clone git://git.drogon.net/wiringPi  
+cd wiringPi  
+./build  
 
-git clone https://github.com/r10r/rcswitch-pi.git
-cd rcswitch-pi
-make
+git clone https://github.com/r10r/rcswitch-pi.git  
+cd rcswitch-pi  
+make  
 
-sudo apt-get install lirc liblircclient-dev
+#### Installation of libraries to manage ir transmitter  
 
-Edit file /etc/lirc/hardware.conf like this :
+sudo apt-get install lirc liblircclient-dev  
 
-nano /etc/lirc/hardware.conf
+Edit file /etc/lirc/hardware.conf like this :  
+
+nano /etc/lirc/hardware.conf  
 
     # Arguments which will be used when launching lircd
     LIRCD_ARGS="--uinput"
@@ -66,8 +75,8 @@ nano /etc/lirc/hardware.conf
     LIRCD_CONF=""
     LIRCMD_CONF=""
 
-TEST reception
+#### TEST reception  
 
-sudo /etc/init.d/lirc stop
-mode2 -d /dev/lirc0
+sudo /etc/init.d/lirc stop  
+mode2 -d /dev/lirc0  
 
