@@ -46,7 +46,7 @@ git clone https://github.com/r10r/rcswitch-pi.git
 cd rcswitch-pi  
 make  
 
-#### Lib installation to manago ir transmitter  
+#### Installation of libraries to manage ir transmitter  
 
 sudo apt-get install lirc liblircclient-dev  
 
