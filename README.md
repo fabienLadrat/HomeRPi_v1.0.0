@@ -1,22 +1,22 @@
 # HomeRPi_v1.0.0
-HomeRPi domotic project
+HomeRPi domotic project  
 
-Installation of nodejs and npm on rapsberry pi
+Installation of nodejs and npm on rapsberry pi  
 
-wget http://nodejs.org/dist/v0.10.28/node-v0.10.28-linux-arm-pi.tar.gz
-tar -xzf node-v0.10.28-linux-arm-pi.tar.gz
-mkdir /opt/node
-nano /etc/profile
+wget http://nodejs.org/dist/v0.10.28/node-v0.10.28-linux-arm-pi.tar.gz  
+tar -xzf node-v0.10.28-linux-arm-pi.tar.gz  
+mkdir /opt/node  
+nano /etc/profile  
 
-add into /etc/profile 
-    PATH=$PATH:/opt/node/bin
-before
-    export PATH
+add into /etc/profile  
+    PATH=$PATH:/opt/node/bin  
+before  
+    export PATH  
 
-sudo cp -r node-v0.10.28-linux-arm-pi/* /opt/node
-cd /var/www
+sudo cp -r node-v0.10.28-linux-arm-pi/* /opt/node  
+cd /var/www  
 
-node module installation in node_modules directory
+node module installation in node_modules directory  
 npm install express
 npm install socket.io
 npm install request
