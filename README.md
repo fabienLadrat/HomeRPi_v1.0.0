@@ -30,7 +30,6 @@ npm install body-parser
 npm install date-utils  
 npm install dom-js  
 npm install exec-sync  
-npm install request-sync  
 npm install sqli  
 npm install sync-request  
 
