@@ -57,7 +57,8 @@ exports.executeCommandChacon = function(id, state, device_name, text, speak){
 		lastCommand = "none";
 	}
 	if((state == "stop" && actualCommand != "none") || lastCommand != actualCommand){
-		dao.insertOrUpdateCmd(actualCommand, id, device_name, state, text, speak);
+		dao.updateDeviceStateById(id,state);
+		//dao.insertOrUpdateCmd(actualCommand, id, device_name, state, text, speak);
 		execSync(actualCommand);
 	}
 	if(state != "stop"){
@@ -80,6 +81,48 @@ exports.sendNotification = function(msgToPost){
 			logger.debug("erreur lors de l'envoi de notification : " + error);
         }
     })
+}
+
+exports.sendNotificationV2 = function(msgToPost, titre){
+
+	/*var GCM = require('gcm').GCM;
+
+	var apiKey = 'AIzaSyAJrS80H8ri40dJpWf0KT8DYtpSWLOfMf8';
+	var gcm = new GCM(apiKey);
+
+	var message = {
+		registration_id: 'APA91bHMy6SYTYtVyhoAeo074-dVdVU2pRh1lwUH2CkcQyrQo3FAqMYBDyBq4YRhZ20HzeNjryArsMpfgjyTpuYniDTfOwQPbVlG3YZJLNqrQWr1getDvYN1hZD2iF2Q_DPr5efhpBt6', // required
+		data:{
+			titre:titre,
+			message:msgToPost
+		}
+	};
+
+	gcm.send(message, function(err, messageId){
+		if (err) {
+			console.log("Something has gone wrong!");
+		} else {
+			console.log("Sent with message ID: ", messageId);
+		}
+	});*/
+	
+	
+	var gcm = require('android-gcm');
+ 
+	// initialize new androidGcm object 
+	var gcmObject = new gcm.AndroidGcm('AIzaSyAJrS80H8ri40dJpWf0KT8DYtpSWLOfMf8');
+	 
+	// create new message 
+	var message = new gcm.Message({
+		registration_ids: ['APA91bHMy6SYTYtVyhoAeo074-dVdVU2pRh1lwUH2CkcQyrQo3FAqMYBDyBq4YRhZ20HzeNjryArsMpfgjyTpuYniDTfOwQPbVlG3YZJLNqrQWr1getDvYN1hZD2iF2Q_DPr5efhpBt6'],
+		data: {
+			titre: titre,
+			message: msgToPost
+		}
+	});
+	 
+	// send the message 
+	gcmObject.send(message, function(err, response) {});
 }
 
 var dateEquals = function(d1, d2){

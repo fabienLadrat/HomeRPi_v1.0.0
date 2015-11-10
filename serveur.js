@@ -1,4 +1,4 @@
-require('daemon')();
+//require('daemon')();
 var http = require('http');
 var https = require('https');
 var sys = require('sys');
@@ -94,7 +94,7 @@ io.sockets.on('connection', function (socket) {
     });	
 	
 	socket.on('getDeviceList', function (callback) {
-		dao.getDeviceList("", function (dataResponse) {
+		dao.getDeviceList(function (dataResponse) {
 			dataResponse.forEach(function(device) {
 				logger.debug(device.id + " | " + device.deviceLibelle + " | " + device.physicalId + " | " + device.deviceName);
 			});
@@ -147,6 +147,7 @@ nodeCronActivities();
 //majXBMC();
 
 tools.sendNotification("Lancement du serveur nodejs OK !");
+tools.sendNotificationV2("Lancement serveur nodejs OK !","HomeRPi");
 
 function nodeCronReveil(){
 	check_nodeCronReveil(function(){
@@ -210,8 +211,32 @@ function wakeUp(){
 * fonction qui check si faut ouvrir les volets
 */
 function startOfDay(){
+//updateGlobalState
+//getGlobalState
+	
+	dao.getDeviceStateById(4, function(etatDevice){
+		if(typeof sunHour !== 'undefined'){
+			if((etatDevice.deviceState === "off") && tools.isTimeToOpenStore(sunHour)===true 
+				&& tools.isNoWorkingDay()===false){
+				logger.debug("startOfDay() : Ouverture des stores...");
+				var message = "CRON OUVERTURE DES VOLETS";
+				tools.executeCommandChacon(4, "on", "Volet roulant", message, message);
+				//dao.updateParamsTable("etat_store","opened");
+				tools.sendNotification("Ouverture des stores");
+				//var newEtatGlobal={ etatStore : "on"};
+				/*if(etatGlobalBdd.etatLampeSalon === 'on'){
+					message = ", extinction du salon.";
+					tools.executeCommandChacon(5, "off", "Lampe 1", message, message);
+					tools.executeCommandChacon(6, "off", "Lampe 2", message, message);
+					//newEtatGlobal.etatLampeSalon = "off";
+				}*/
+				dao.updateDeviceStateById(4, "on");
+			}
+		}
+	});
+
 	// get etat store
-	dao.getParamValueByName('etat_store', function (etat) {
+	/*dao.getParamValueByName('etat_store', function (etat) {
 		//logger.debug("startOfDay() : etatStore : " + etat);
 		if(typeof sunHour !== 'undefined'){
 			if((etat === "closed" || etat === "N/A" ) && tools.isTimeToOpenStore(sunHour)===true 
@@ -224,33 +249,56 @@ function startOfDay(){
 				// TODO implemente extinction lumiere salon si necessaire
 			}
 		}
-	});
+	});/*/
 }
 
 /*
 * fonction qui check si faut fermer les volets
 */
 function endOfDay(){
+
+	dao.getDeviceStateById(4, function(etatDevice){
+		if(typeof sunHour !== 'undefined'){
+			if((etatDevice.deviceState === "on") && tools.isTimeToCloseStore(sunHour)===true){
+				logger.debug("endOfDay() : Fermeture des stores...");
+				var message = "Fermeture des stores";
+				tools.executeCommandChacon(4, "off", "Volet roulant", message, message);
+				// var newEtatGlobal={ etatStore : "closed"};
+
+				// TODO implemente allumage lumiere salon si necessaire
+				// if(etatGlobalBdd.homePresence === 'true'){
+					// message = ", allumage du salon.";
+					// tools.executeCommandChacon(5, "on", "Lampe 1", message, message);
+					// tools.executeCommandChacon(6, "on", "Lampe 2", message, message);
+					// newEtatGlobal.etatLampeSalon = "on";
+				// }
+				// dao.updateGlobalState(newEtatGlobal);
+				dao.updateDeviceStateById(4, "off");
+				tools.sendNotification("Fermeture des stores");
+			}
+		}
+	});
+
 	// get etat store
-	dao.getParamValueByName('etat_store', function (etat) {
+	/*dao.getParamValueByName('etat_store', function (etat) {
 		//logger.debug("endOfDay() : etatStore : " + etat);
 		if(typeof sunHour !== 'undefined'){
 			if((etat === "opened" || etat === "N/A" ) && tools.isTimeToCloseStore(sunHour)===true){
 				logger.debug("endOfDay() : Fermeture des stores...");
-				var message = "CRON FERMETURE DES VOLETS";
+				var message = "Fermeture des stores";
 				tools.executeCommandChacon(4, "off", "Volet roulant", message, message);
 				dao.updateParamsTable("etat_store","closed");
 				dao.getParamValueByName('home_presence', function (homePresence) {
 					if(homePresence === 'true'){
+						message = ", allumage du salon.";
 						tools.executeCommandChacon(5, "on", "Lampe 1", message, message);
 						tools.executeCommandChacon(6, "on", "Lampe 2", message, message);
-						message = ", allumage du salon.";
 					}
 				});
-				tools.sendNotification("Fermeture des stores" + message);
+				tools.sendNotification(message);
 			}	
 		}
-	});
+	});*/
 }
 
 function stopStore(){
