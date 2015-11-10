@@ -19,12 +19,20 @@ cd /var/www
 node module installation in node_modules directory
 npm install express
 npm install socket.io
-npm install annyang
 npm install request
 npm install sqlite3
 npm install daemon
 npm install log4js
 npm install ejs
+npm install aimlinterpreter
+npm install android-gcm
+npm install body-parser
+npm install date-utils
+npm install dom-js
+npm install exec-sync
+npm install request-sync
+npm install sqli
+npm install sync-request
 
 Installation of libraries to manage gpio, lirc
 
